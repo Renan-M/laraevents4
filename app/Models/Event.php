@@ -24,7 +24,7 @@ class Event extends Model
     //relationships
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->whithPivot('present');
     }
 
     //mutators

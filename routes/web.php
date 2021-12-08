@@ -7,7 +7,7 @@ use App\Http\Controllers\Participant\Dashboard\DashboardController as Participan
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Organization\
-{Dashboard\DashboardController as OrganizationDashboardController,Event\EventController, Event\EventSubscriptionController};
+{Dashboard\DashboardController as OrganizationDashboardController,Event\EventController, Event\EventSubscriptionController, Event\EventPresenceController};
 
 
 
@@ -48,6 +48,10 @@ Route::group(['middleware'=>'auth'],function() {
      //eventos
      Route::post('events/{event}/subscription', [EventSubscriptionController::class, 'store'])
         ->name('events.subscription.store');
+     Route::delete('events/{event}/subscription/{user}', [EventSubscriptionController::class, 'destroy'])
+        ->name('events.subscription.destroy');
+    Route::post('events/{event}/presences/{user}', EventPresenceController::class)
+        ->name('events.presences');
      Route::resource('events', EventController::class);
     });
 });

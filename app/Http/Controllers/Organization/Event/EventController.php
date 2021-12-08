@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organization\Event;
 use App\Http\Controllers\Controller;
 use App\Models\{Event, User};
 use App\Http\Requests\Organization\Event\EventRequest;
+use App\Services\Eventservice;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -42,8 +43,13 @@ class EventController extends Controller
     {
         return view('organization.events.show', [
             'event' => $event,
+            'eventStartDateHasPassed' => EventService::eventStartDateHasPassed($event),
+            'eventEndDateHasPassed' => EventService::eventEndDateHasPassed($event),
             'allParticipantUsers' => User::query()
                 ->where('role', 'participant')
+                ->whereDoesntHave('events', function($query) use($event){
+                    $query->where('id', $event->id);
+                })
                 ->get()
         ]);
     }

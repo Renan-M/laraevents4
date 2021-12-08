@@ -59,7 +59,30 @@
                     @foreach ($event->users as $user)
                         <tr>
                             <td>{{ $user->name }}</td>
-                            <td></td>
+                            <td class="text-right">
+                                <div class="d-flex align-items-center justify-content-end">
+                                    @if ($eventStartDateHasPassed)
+                                        <form method="POST" action="{{ route('organization.events.presences', [
+                                            'event' => $event->id,
+                                            'user' => $user->id
+                                        ]) }}">
+                                            @csrf
+                                            <button class="btn btn-sm mr-2 {{ $user->pivot->present ? 'btn-danger' : 'btn-succes'}}">
+                                                {{ $user->pivot->present ? 'Remover presença' : 'Assinar presença' }}
+                                            </button>
+                                        </form>
+                                        @endif
+                                    @if(!$eventEndDateHasPassed)
+                                        <form method="POST" action="{{ route('organization.events.subscription.destroy', [
+                                                'event' => $event->id,
+                                                'user' => $user->id
+                                            ]) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm btn-danger">Remover inscrição</button>
+                                        </form>
+                                    @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
